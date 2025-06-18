@@ -7,10 +7,10 @@ app = FastAPI()
 # ✅ Middleware de CORS para permitir peticiones desde cualquier origen
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Puedes restringir esto en producción
+    allow_origins=["*"],  # Permite cualquier dominio, puedes restringir en producción
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Permite todos los métodos HTTP (GET, POST, etc.)
+    allow_headers=["*"],  # Permite todos los encabezados
 )
 
 # ✅ Incluir el router de reportes

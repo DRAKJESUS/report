@@ -9,6 +9,7 @@ from datetime import datetime
 
 router = APIRouter(prefix="/reportes", tags=["Reportes"])
 
+# Función para generar el archivo Excel desde las filas de la base de datos
 async def generar_excel_desde_filas(rows, claveM, extra_nombre=""):
     registros = []
     for row in rows:
@@ -30,6 +31,7 @@ async def generar_excel_desde_filas(rows, claveM, extra_nombre=""):
     df.to_excel(path, index=False)
     return path, filename
 
+# Endpoint para generar el Excel de asistencias (por grupo)
 @router.get("/excel_asistencias")
 async def exportar_excel_asistencias(
     claveM: str = Query(...),
@@ -52,11 +54,13 @@ async def exportar_excel_asistencias(
         '''
         result = await db.execute(text(query), {'claveM': claveM, 'numGrup': numGrup})
         rows = result.fetchall()
+
         if not rows:
             raise HTTPException(status_code=404, detail="No se encontraron registros")
 
+        # Generación del archivo Excel
         path, filename = await generar_excel_desde_filas(rows, claveM, f"_grupo{numGrup}")
-        return FileResponse(path, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename=filename)
+        return FileResponse(path, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', filename=filename)
 
     except Exception as e:
         print("Error generando Excel:", e)
